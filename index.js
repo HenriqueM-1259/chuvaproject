@@ -74,7 +74,7 @@ class gota{
     getRandomL(){
         let con = Math.floor(Math.random() * 30);
         this.tamanho.altura = con
-        this.tamanho.largura =  (con / 30)
+        this.tamanho.largura =  (con / 31)
     }
 
    
