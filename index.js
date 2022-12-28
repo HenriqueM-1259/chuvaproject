@@ -10,7 +10,7 @@ class gota{
             altura:0,
         }
         this.velocidade=2;
-        this.gravidade=1,
+        this.gravidade=1.3,
         this.colider=false,
         this.render={}
         this.getRandomX()
