@@ -18,7 +18,7 @@ class Player {
 
     Drawn() {
         this.render = this.canvas.getContext('2d')
-
+        this.fillStyle = 'red'
         this.render.fillRect(this.pos.x, this.pos.y, this.tamanho.largura, this.tamanho.altura)
 
         return true
@@ -74,11 +74,7 @@ class gota {
         if (this.render != undefined) {
 
         }
-        if (this.mouse.y + 5 <= this.pos.y + this.tamanho.altura && this.mouse.x <= this.pos.x + this.tamanho.largura) {
-            this.velocidade = 0
-            this.gravidade = 1
-        }
-
+    
         this.pos.y += this.velocidade + this.gravidade * this.tamanho.altura;
     }
 
@@ -121,19 +117,23 @@ class gota {
     getRandomL() {
         let con = Math.floor(Math.random() * 30);
         this.tamanho.altura = con
-        this.tamanho.largura =  (con / 30)
+        this.tamanho.largura =  (con / 12)
     }
 
 
 }
 class chuva {
     constructor(canvas) {
-        this.qtdGota = 150;
+        this.qtdGota = 1505;
         this.canvas = canvas;
         this.gotas = []
         this.pos =
         {
             x: 0, y: 0
+        }
+        this.mouse ={
+            x:0,
+            y:0
         }
         this.addGota()
     }
@@ -147,9 +147,13 @@ class chuva {
 
     Update() {
         for (let i = 0; i < this.gotas.length; i++) {
-            this.gotas[i].Update();
+            if(!this.isCollider(this.gotas[i])){
+                this.gotas[i].Update();
+            }
+            
             //console.log(this.gotas[i])
             //this.isCollid(this.gotas[i]);
+
             if (this.gotas[i].pos.y >= window.innerWidth) {
                 //console.log(this.gotas[i])             
                 this.gotas[i].getRandomX();
@@ -163,7 +167,28 @@ class chuva {
             this.gotas[i].Drawn();
         }
     }
+    isCollider(gota){
+        
+        if(this.mouse.x + 51 > gota.pos.x + gota.tamanho.largura 
+            ){
+               gota.pos.x -= 5;
+        }
+        if(window.innerWidth - this.mouse.x  > gota.pos.x - gota.tamanho.largura 
+            ){
+               
+               gota.pos.x += 5;
+        }
+       
+        
+        
+       
+        console.log(window.innerHeight - this.mouse.y)
+    }
 
+    setMouse(mouse){
+        this.mouse = mouse
+       // console.log(this.mouse)
+    }
 }
 
 
@@ -176,18 +201,25 @@ c.height = window.innerHeight;
 
 const ch = new chuva(c)
 var go = new gota(c)
-var play = new Player(c)
+
 function runLoop() {
     cContext.clearRect(0, 0, window.innerWidth, window.innerHeight)
     ch.Update();
     ch.Drawn()
-    play.Update()
-    play.Drawn();
     document.addEventListener('keypress', function (event) {
         const key = event.key;
         const code = event.keyCode;
-        play.move(key)
+        //play.move(key)
         console.log(`Key: ${key}, Code ${code}`);
+      });
+      document.addEventListener('mousemove', function (event) {
+        mouse = {
+            x: event.x,
+            y: event.y
+        }
+        ch.setMouse(mouse)
+        //play.move(key)
+        //console.log(event);
       });
 }
 
